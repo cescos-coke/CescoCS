@@ -88,23 +88,6 @@ export const HotResQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Drink Boris Beer",
-      completed: () =>
-        have($effect`Beery Cool`) ||
-        ((!have($item`bowl of cottage cheese`) || !have($item`Yeast of Boris`)) &&
-          !have($item`Boris's beer`)) ||
-        myInebriety() >= inebrietyLimit() ||
-        get("instant_saveBorisBeer", false),
-      do: (): void => {
-        tryAcquiringEffect($effect`Ode to Booze`);
-        if (have($item`Yeast of Boris`) && have($item`bowl of cottage cheese`))
-          create($item`Boris's beer`, 1);
-        if (have($item`Boris's beer`)) drink($item`Boris's beer`, 1);
-        uneffect($effect`Ode to Booze`);
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "Horsery",
       completed: () => get("_horsery") === "pale horse" || !get("horseryAvailable"),
       do: () => cliExecute("horsery pale"),
@@ -121,22 +104,6 @@ export const HotResQuest: Quest = {
       prepare: (): void => {
         cliExecute("retrocape vampire hold");
         if (get("parkaMode") !== "pterodactyl") cliExecute("parka pterodactyl");
-        if (
-          get("_kgbClicksUsed") < 22 &&
-          have($item`Kremlin's Greatest Briefcase`) &&
-          !get("instant_saveKGBClicks", false)
-        )
-          cliExecute("briefcase e hot");
-        if (
-          have($skill`Summon Clip Art`) &&
-          !get("instant_saveClipArt", false) &&
-          have($familiar`Exotic Parrot`) &&
-          !have($item`cracker`)
-        ) {
-          if (!have($item`box of Familiar Jacks`)) create($item`box of Familiar Jacks`, 1);
-          useFamiliar($familiar`Exotic Parrot`);
-          use($item`box of Familiar Jacks`, 1);
-        }
         const usefulEffects: Effect[] = [
           $effect`Amazing`,
           $effect`Astral Shell`,
@@ -144,7 +111,6 @@ export const HotResQuest: Quest = {
           $effect`Elemental Saucesphere`,
           $effect`Feeling Peaceful`,
           $effect`Hot-Headed`,
-          $effect`Rainbowolin`,
 
           // Famwt Buffs
           $effect`Blood Bond`,

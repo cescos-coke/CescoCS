@@ -587,7 +587,7 @@ export const LevelingQuest: Quest = {
         ...baseOutfit(),
         offhand: $item`Kramco Sausage-o-Matic™`,
       }),
-      combat: new CombatStrategy().macro(Macro.default(useCinch)),
+      combat: new CombatStrategy().macro(Macro.default(false)),
       post: (): void => {
         sendAutumnaton();
         sellMiscellaneousItems();
@@ -638,7 +638,7 @@ export const LevelingQuest: Quest = {
       },
       completed: () => get("_godLobsterFights") >= 3 || !have($familiar`God Lobster`),
       do: () => visitUrl("main.php?fightgodlobster=1"),
-      combat: new CombatStrategy().macro(Macro.default(useCinch)),
+      combat: new CombatStrategy().macro(Macro.default(false)),
       choices: { 1310: () => (have($item`God Lobster's Ring`) ? 2 : 3) }, // Get xp on last fight
       outfit: () => ({
         ...baseOutfit(),
@@ -666,7 +666,7 @@ export const LevelingQuest: Quest = {
         sendAutumnaton();
         sellMiscellaneousItems();
       },
-      combat: new CombatStrategy().macro(Macro.default(useCinch)),
+      combat: new CombatStrategy().macro(Macro.default(false)),
       outfit: baseOutfit,
       limit: { tries: 1 },
     },
@@ -698,7 +698,7 @@ export const LevelingQuest: Quest = {
       combat: new CombatStrategy().macro(
         Macro.tryItem($item`red rocket`)
           .trySkill($skill`Bowl Sideways`)
-          .default(useCinch)
+          .default(false)
       ),
       post: (): void => {
         sendAutumnaton();
