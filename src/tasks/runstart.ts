@@ -33,6 +33,7 @@ import {
   totalFreeRests,
   turnsPlayed,
   use,
+  useFamiliar,
   useSkill,
   visitUrl,
 } from "kolmafia";
@@ -205,6 +206,7 @@ export const RunStartQuest: Quest = {
             "red"
           );
         }
+        useFamiliar($familiar`Melodramedary`);
         use($item`box of Familiar Jacks`, 1);
       },
       limit: { tries: 1 },
