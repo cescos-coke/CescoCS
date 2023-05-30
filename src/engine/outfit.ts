@@ -1,6 +1,6 @@
 import { OutfitSpec } from "grimoire-kolmafia";
 import { cliExecute, equip, equippedItem, Familiar, Item, toInt } from "kolmafia";
-import { $familiar, $familiars, $item, $skill, $slot, get, have, maxBy } from "libram";
+import { $effect, $familiar, $familiars, $item, $skill, $slot, get, have, maxBy } from "libram";
 import { haveCBBIngredients } from "../lib";
 
 export function garbageShirt(): void {
@@ -54,8 +54,12 @@ function nanorhino(allowAttackingFamiliars = false): Familiar {
     : $familiar.none;
 }
 
+function camel(): Familiar {
+  return get("camelSpit") < 100 && !have($effect`Spit Upon`) ? $familiar`Melodramedary` : $familiar.none;
+}
+
 function cookbookbat(): Familiar {
-  return !haveCBBIngredients(true) ? $familiar`Cookbookbat` : $familiar.none;
+  return $familiar`Cookbookbat`;
 }
 
 function shorterOrderCook(allowAttackingFamiliars = true): Familiar {
@@ -89,10 +93,10 @@ export function chooseFamiliar(allowAttackingFamiliars = true): Familiar {
   const ignoredFamiliars = get("instant_explicitlyExcludedFamiliars", "")
     .split(",")
     .map((i) => toInt(i));
-  const defaultFam = have($familiar`Cookbookbat`) ? $familiar`Cookbookbat` : $familiar.none;
   const familiars = [
-    cookbookbat,
+    camel,
     shorterOrderCook,
+    cookbookbat,
     garbageFire,
     nanorhino,
     optimisticCandle,
@@ -101,7 +105,7 @@ export function chooseFamiliar(allowAttackingFamiliars = true): Familiar {
   ]
     .map((fn) => fn(allowAttackingFamiliars))
     .filter((fam) => have(fam) && !ignoredFamiliars.includes(toInt(fam)));
-  return familiars.length > 0 ? familiars[0] : defaultFam;
+  return familiars[0];
 }
 
 const specialEquipFamiliars = $familiars`Disembodied Hand, Left-Hand Man, Mad Hatrack, Fancypants Scarecrow, Ghost of Crimbo Carols, Ghost of Crimbo Cheer, Ghost of Crimbo Commerce`;
@@ -115,15 +119,17 @@ export function chooseHeaviestFamiliar(): Familiar {
 export function baseOutfit(allowAttackingFamiliars = true): OutfitSpec {
   // Only try equipping/nag LOV Epaulettes if we are done with the LOV tunnel
   const lovTunnelCompleted = get("_loveTunnelUsed") || !get("loveTunnelAvailable");
+  const famChoice = chooseFamiliar(allowAttackingFamiliars);
   return {
     offhand: $item`unbreakable umbrella`,
     back: lovTunnelCompleted ? $item`LOV Epaulettes` : undefined,
     acc1: $item`codpiece`,
     acc2:
-      have($item`Cincho de Mayo`) && get("_cinchUsed", 0) < 95 && !get("instant_saveCinch", false)
+      have($item`Cincho de Mayo`) && get("_cinchUsed", 0) < 20 && !get("instant_saveCinch", false)
         ? $item`Cincho de Mayo`
         : undefined,
-    familiar: chooseFamiliar(allowAttackingFamiliars),
+    familiar: famChoice,
+    famequip: famChoice === $familiar`Melodramedary` ? $item`dromedary drinking helmet` : $item`tiny stillsuit`,
     modifier: "0.25 mys, 0.33 ML, -equip tinsel tights, -equip wad of used tape",
     avoid: sugarItemsAboutToBreak(),
   };

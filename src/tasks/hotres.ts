@@ -34,23 +34,19 @@ export const HotResQuest: Quest = {
   completed: () => CommunityService.HotRes.isDone(),
   tasks: [
     {
-      name: "Reminisce Factory Worker (female)",
-      prepare: (): void => {
-        if (!have($item`yellow rocket`) && !have($effect`Everything Looks Yellow`))
-          buy($item`yellow rocket`, 1);
-      },
+      name: "Reminisce Red Skeleton",
       completed: () =>
-        CombatLoversLocket.monstersReminisced().includes($monster`factory worker (female)`) ||
-        !CombatLoversLocket.availableLocketMonsters().includes($monster`factory worker (female)`) ||
-        get("instant_saveLocketFactoryWorker", false),
-      do: () => CombatLoversLocket.reminisce($monster`factory worker (female)`),
+        CombatLoversLocket.monstersReminisced().includes($monster`red skeleton`) ||
+        !CombatLoversLocket.availableLocketMonsters().includes($monster`red skeleton`) ||
+        get("instant_saveLocketRedSkeleton", false),
+      do: () => CombatLoversLocket.reminisce($monster`red skeleton`),
       outfit: () => ({
         back: $item`vampyric cloake`,
         weapon: $item`Fourth of May Cosplay Saber`,
         offhand: have($skill`Double-Fisted Skull Smashing`)
           ? $item`industrial fire extinguisher`
           : undefined,
-        familiar: $familiar`Cookbookbat`,
+        familiar: $familiar`Melodramedary`,
         modifier: "Item Drop",
         avoid: sugarItemsAboutToBreak(),
       }),
@@ -58,6 +54,7 @@ export const HotResQuest: Quest = {
       combat: new CombatStrategy().macro(
         Macro.trySkill($skill`Become a Cloud of Mist`)
           .trySkill($skill`Fire Extinguisher: Foam Yourself`)
+          .trySkill($skill`%fn, spit on me!`)
           .trySkill($skill`Use the Force`)
           .trySkill($skill`Shocking Lick`)
           .tryItem($item`yellow rocket`)

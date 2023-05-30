@@ -77,25 +77,6 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Acquire Clover",
-      completed: () => have($item`11-leaf clover`) || get("_cloversPurchased") >= 2,
-      do: (): void => {
-        buy(1, $item`chewing gum on a string`);
-        use(1, $item`chewing gum on a string`);
-        hermit($item`11-leaf clover`, 1);
-      },
-      limit: { tries: 50 },
-    },
-    {
-      name: "Get Cyclops Eyedrops",
-      completed: () => have($item`cyclops eyedrops`) || have($effect`One Very Clear Eye`),
-      do: (): void => {
-        if (!have($effect`Lucky!`)) use($item`11-leaf clover`);
-        if (!have($item`cyclops eyedrops`)) adv1($location`The Limerick Dungeon`, -1);
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "Fax Ungulith",
       completed: () => get("_photocopyUsed"),
       do: (): void => {
@@ -125,23 +106,6 @@ export const BoozeDropQuest: Quest = {
           .trySkill($skill`Use the Force`)
           .default()
       ),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Eat roasted vegetable of Jarlsberg",
-      completed: () =>
-        have($effect`Wizard Sight`) ||
-        get("instant_saveRoastedVegetableItem", false) ||
-        (!have($item`roasted vegetable of Jarlsberg`) &&
-          itemAmount($item`Vegetable of Jarlsberg`) < 2),
-      do: (): void => {
-        if (
-          itemAmount($item`Vegetable of Jarlsberg`) >= 2 &&
-          !have($item`roasted vegetable of Jarlsberg`)
-        )
-          create($item`roasted vegetable of Jarlsberg`, 1);
-        eat($item`roasted vegetable of Jarlsberg`, 1);
-      },
       limit: { tries: 1 },
     },
     {
@@ -185,18 +149,6 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-      name: "Pumpkin Juice",
-      completed: () =>
-        have($effect`Juiced and Jacked`) ||
-        (!have($item`pumpkin`) && !have($item`pumpkin juice`)) ||
-        get("instant_savePumpkins", false),
-      do: (): void => {
-        if (!have($item`pumpkin juice`)) create($item`pumpkin juice`, 1);
-        use($item`pumpkin juice`, 1);
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "Loathing Idol Microphone",
       completed: () =>
         // eslint-disable-next-line libram/verify-constants
@@ -227,7 +179,6 @@ export const BoozeDropQuest: Quest = {
           $effect`Fat Leon's Phat Loot Lyric`,
           // $effect`Feeling Lost`,
           $effect`items.enh`,
-          $effect`One Very Clear Eye`,
           $effect`Nearly All-Natural`,
           $effect`The Spirit of Taking`,
           $effect`Singer's Faithful Ocelot`,
@@ -235,11 +186,6 @@ export const BoozeDropQuest: Quest = {
           $effect`Uncucumbered`,
         ];
         usefulEffects.forEach((ef) => tryAcquiringEffect(ef, true));
-
-        if (have($familiar`Trick-or-Treating Tot`) && have($item`li'l ninja costume`)) {
-          useFamiliar($familiar`Trick-or-Treating Tot`);
-          equip($slot`familiar`, $item`li'l ninja costume`);
-        }
         // If it saves us >= 6 turns, try using a wish
         if (CommunityService.BoozeDrop.actualCost() >= 7) wishFor($effect`Infernal Thirst`);
       },

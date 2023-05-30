@@ -76,10 +76,8 @@ export function logTestSetup(whichTest: CommunityService): void {
   printModtrace(testModifiers.get(whichTest) ?? []);
   logRelevantStats(whichTest);
   print(
-    `${whichTest.statName} ${
-      whichTest !== CommunityService.CoilWire ? "Test" : ""
-    } takes ${testTurns} adventure${testTurns === 1 ? "" : "s"} (predicted: ${
-      whichTest.prediction
+    `${whichTest.statName} ${whichTest !== CommunityService.CoilWire ? "Test" : ""
+    } takes ${testTurns} adventure${testTurns === 1 ? "" : "s"} (predicted: ${whichTest.prediction
     }).`,
     "blue"
   );
@@ -153,9 +151,9 @@ export function canAcquireEffect(ef: Effect): boolean {
           return (
             get("_sourceTerminalEnhanceUses") <
             1 +
-              get("sourceTerminalChips")
-                .split(",")
-                .filter((s) => s.includes("CRAM")).length
+            get("sourceTerminalChips")
+              .split(",")
+              .filter((s) => s.includes("CRAM")).length
           );
         case "daycare":
           return get("daycareOpen") && !get("_daycareSpa");
