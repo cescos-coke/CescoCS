@@ -33,37 +33,12 @@ export const WeaponDamageQuest: Quest = {
   completed: () => CommunityService.WeaponDamage.isDone(),
   tasks: [
     {
-      name: "Drink Sockdollager",
-      completed: () =>
-        have($effect`In a Lather`) ||
-        myInebriety() >= inebrietyLimit() - 1 ||
-        myMeat() < 500 ||
-        get("instant_saveSockdollager", false),
-      do: (): void => {
-        tryAcquiringEffect($effect`Ode to Booze`);
-        visitUrl(`clan_viplounge.php?preaction=speakeasydrink&drink=6&pwd=${+myHash()}`); // Sockdollager
-      },
-      limit: { tries: 1 },
-    },
-    {
       name: "Potion of Potency",
       completed: () =>
         have($item`potion of potency`) ||
         have($effect`Pronounced Potency`) ||
         !have($item`scrumptious reagent`),
       do: () => create($item`potion of potency`, 1),
-      limit: { tries: 1 },
-    },
-    {
-      name: "Cargo Shorts",
-      completed: () =>
-        get("_cargoPocketEmptied") ||
-        !have($item`Cargo Cultist Shorts`) ||
-        get("instant_saveCargoShorts", false),
-      do: (): void => {
-        visitUrl("inventory.php?action=pocket");
-        visitUrl("choice.php?whichchoice=1420&option=1&pocket=284");
-      },
       limit: { tries: 1 },
     },
     {
@@ -87,7 +62,7 @@ export const WeaponDamageQuest: Quest = {
       ),
       outfit: () => ({
         weapon: $item`Fourth of May Cosplay Saber`,
-        familiar: $familiar`Cookbookbat`,
+        familiar: $familiar`Ghost of Crimbo Carols`,
         avoid: sugarItemsAboutToBreak(),
       }),
       choices: { 1387: 3 },
@@ -113,7 +88,6 @@ export const WeaponDamageQuest: Quest = {
           $effect`Lack of Body-Building`,
           $effect`Pronounced Potency`,
           $effect`Rage of the Reindeer`,
-          $effect`Rictus of Yeg`,
           $effect`Seeing Red`,
           $effect`Scowl of the Auk`,
           $effect`Song of the North`,
@@ -125,7 +99,7 @@ export const WeaponDamageQuest: Quest = {
         usefulEffects.forEach((ef) => tryAcquiringEffect(ef, true));
         // If it saves us >= 6 turns, try using a wish
         if (CommunityService.WeaponDamage.actualCost() >= 7) wishFor($effect`Outer Wolf™`);
-        $effects`Spit Upon, Pyramid Power`.forEach((ef) => {
+        $effects`Pyramid Power`.forEach((ef) => {
           if (CommunityService.WeaponDamage.actualCost() >= 5) wishFor(ef); // The effects each save 2 turns on spelltest as well
         });
       },

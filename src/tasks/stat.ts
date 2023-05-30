@@ -26,7 +26,6 @@ export const HPQuest: Quest = {
         const usefulEffects: Effect[] = [
           $effect`A Few Extra Pounds`,
           $effect`Big`,
-          $effect`Hulkien`,
           $effect`Mariachi Mood`,
           $effect`Patience of the Tortoise`,
           $effect`Power Ballad of the Arrowsmith`,
@@ -81,7 +80,6 @@ export const MuscleQuest: Quest = {
         const usefulEffects: Effect[] = [
           $effect`Big`,
           $effect`Go Get 'Em, Tiger!`,
-          $effect`Hulkien`,
           $effect`Quiet Determination`,
           $effect`Power Ballad of the Arrowsmith`,
           $effect`Phorcefullness`,
@@ -125,7 +123,6 @@ export const MysticalityQuest: Quest = {
         const usefulEffects: Effect[] = [
           $effect`Big`,
           $effect`Glittering Eyelashes`,
-          $effect`Hulkien`,
           $effect`The Magical Mojomuscular Melody`,
           $effect`Triple-Sized`,
           $effect`Pasta Oneness`,
@@ -181,7 +178,6 @@ export const MoxieQuest: Quest = {
           $effect`Butt-Rock Hair`,
           $effect`Disco Fever`,
           $effect`Disco State of Mind`,
-          $effect`Hulkien`,
           $effect`The Moxious Madrigal`,
           $effect`Triple-Sized`,
           $effect`Pomp & Circumsands`,

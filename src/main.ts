@@ -30,7 +30,7 @@ import { checkResources } from "./resources";
 
 const timeProperty = "fullday_elapsedTime";
 
-export const args = Args.create("InstantSCCS", "An automated low-shiny SCCS script.", {
+export const args = Args.create("CescoSCCS", "An automated mid-shiny SCCS script.", {
   confirm: Args.boolean({
     help: "If the user must confirm execution of each task.",
     default: false,

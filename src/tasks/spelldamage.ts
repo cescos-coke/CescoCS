@@ -7,7 +7,11 @@ import {
   myAdventures,
   myInebriety,
   print,
+  storageAmount,
+  takeStorage,
+  toInt,
   useSkill,
+  visitUrl
 } from "kolmafia";
 import {
   $effect,
@@ -29,6 +33,34 @@ export const SpellDamageQuest: Quest = {
   name: "Spell Damage",
   completed: () => CommunityService.SpellDamage.isDone(),
   tasks: [
+    {
+      name: "Pull Tobiko marble soda",
+      completed: () =>
+        have($item`tobiko marble soda`) ||
+        have($effect`Pisces in the Skyces`) ||
+        get("_roninStoragePulls")
+          .split(",")
+          .includes(toInt($item`tobiko marble soda`).toString()),
+      do: (): void => {
+        if (storageAmount($item`tobiko marble soda`) === 0) {
+          print("Uh oh! You do not seem to have a tobiko marble soda in Hagnk's", "red");
+        }
+        takeStorage($item`tobiko marble soda`, 1);
+      },
+      limit: { tries: 1 },
+    },
+    {
+      name: "Cargo Shorts",
+      completed: () =>
+        get("_cargoPocketEmptied") ||
+        !have($item`Cargo Cultist Shorts`) ||
+        get("instant_saveCargoShorts", false),
+      do: (): void => {
+        visitUrl("inventory.php?action=pocket");
+        visitUrl("choice.php?whichchoice=1420&option=1&pocket=177");
+      },
+      limit: { tries: 1 },
+    },
     {
       name: "Simmer",
       completed: () => have($effect`Simmering`) || !have($skill`Simmer`),
@@ -69,6 +101,7 @@ export const SpellDamageQuest: Quest = {
           $effect`Jackasses' Symphony of Destruction`,
           $effect`Mental A-cue-ity`,
           $effect`Pisces in the Skyces`,
+          $effect`Sigils of Yeg`,
           $effect`Song of Sauce`,
           $effect`Spirit of Peppermint`,
           $effect`The Magic of LOV`,
@@ -76,16 +109,6 @@ export const SpellDamageQuest: Quest = {
           $effect`We're All Made of Starfish`,
         ];
         usefulEffects.forEach((ef) => tryAcquiringEffect(ef, true));
-
-        const wines = $items`Sacramento wine, distilled fortified wine`;
-        while (
-          CommunityService.SpellDamage.actualCost() > myAdventures() &&
-          myInebriety() < inebrietyLimit() &&
-          wines.some((booze) => have(booze))
-        ) {
-          tryAcquiringEffect($effect`Ode to Booze`);
-          drink(wines.filter((booze) => have(booze))[0], 1);
-        }
       },
       completed: () => CommunityService.SpellDamage.isDone(),
       do: (): void => {

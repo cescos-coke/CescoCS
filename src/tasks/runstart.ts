@@ -175,20 +175,37 @@ export const RunStartQuest: Quest = {
       name: "Borrowed Time",
       prepare: (): void => {
         if (have($item`borrowed time`)) return;
-        if (have($skill`Summon Clip Art`) && get("tomeSummons") < 3)
-          create($item`borrowed time`, 1);
-        else takeStorage($item`borrowed time`, 1);
+        else create($item`borrowed time`, 1);
       },
       completed: () => get("_borrowedTimeUsed"),
       do: (): void => {
-        if (storageAmount($item`borrowed time`) === 0 && !have($item`borrowed time`)) {
-          print("Uh oh! You do not seem to have a borrowed time in Hagnk's", "red");
+        if (!have($item`borrowed time`)) {
+          print("Uh oh! You cannot create a borrowed time", "red");
           print(
-            "Try to purchase one from the mall with your meat from Hagnk's before re-running instantsccs",
+            "Pull one manually?",
             "red"
           );
         }
         use($item`borrowed time`, 1);
+      },
+      limit: { tries: 1 },
+    },
+    {
+      name: "Jacks",
+      prepare: (): void => {
+        if (have($item`box of Familiar Jacks`)) return;
+        else create($item`box of Familiar Jacks`, 1);
+      },
+      completed: () => have($item`dromedary drinking helmet`),
+      do: (): void => {
+        if (!have($item`box of Familiar Jacks`)) {
+          print("Uh oh! You do not have familiar jacks", "red");
+          print(
+            "Pull one manually?",
+            "red"
+          );
+        }
+        use($item`box of Familiar Jacks`, 1);
       },
       limit: { tries: 1 },
     },
@@ -198,30 +215,6 @@ export const RunStartQuest: Quest = {
       completed: () =>
         get("_universeCalculated") >= (get("skillLevel144") > 3 ? 3 : get("skillLevel144")),
       do: () => cliExecute("numberology 69"),
-      limit: { tries: 3 },
-    },
-    {
-      name: "Summon Sugar Sheets",
-      completed: () =>
-        !have($skill`Summon Sugar Sheets`) ||
-        get("instant_saveSugar", false) ||
-        get("tomeSummons") >= 3 ||
-        (have($skill`Summon Clip Art`) && !get("instant_saveClipArt", false)),
-      do: (): void => {
-        const sheetsToMake = 3 - get("tomeSummons");
-        restoreMp(2 * sheetsToMake);
-        useSkill($skill`Summon Sugar Sheets`, sheetsToMake);
-      },
-      limit: { tries: 1 },
-    },
-    {
-      name: "Fold Sugar Sheets",
-      completed: () => !have($item`sugar sheet`),
-      do: (): void => {
-        const nextMissingSugarItem =
-          $items`sugar shorts, sugar chapeau, sugar shank`.find((it) => !have(it)) || $item`none`;
-        create(nextMissingSugarItem);
-      },
       limit: { tries: 3 },
     },
     {
@@ -332,19 +325,9 @@ export const RunStartQuest: Quest = {
     {
       name: "Lathe",
       prepare: () => visitUrl("shop.php?whichshop=lathe"),
-      completed: () => have($item`weeping willow wand`) || !have($item`SpinMaster™ lathe`),
-      do: () => retrieveItem($item`weeping willow wand`),
+      completed: () => have($item`ebony epee`) || !have($item`SpinMaster™ lathe`),
+      do: () => retrieveItem($item`ebony epee`),
       limit: { tries: 1 },
-    },
-    {
-      name: "Backup Camera",
-      completed: () =>
-        !have($item`backup camera`) ||
-        (get("backupCameraMode") === "ml" && get("backupCameraReverserEnabled")),
-      do: (): void => {
-        cliExecute("backupcamera ml");
-        if (!get("backupCameraReverserEnabled")) cliExecute("backupcamera reverser");
-      },
     },
     {
       name: "Update Garbage Tote",
@@ -473,13 +456,14 @@ export const RunStartQuest: Quest = {
         })(),
       do: () => mapMonster($location`The Skeleton Store`, $monster`novelty tropical skeleton`),
       combat: new CombatStrategy().macro(
-        Macro.if_($monster`novelty tropical skeleton`, Macro.tryItem($item`yellow rocket`)).abort()
+        Macro.if_($monster`novelty tropical skeleton`, Macro.trySkill($skill`Spit jurassic acid`)).abort()
       ),
       outfit: (): OutfitSpec => {
         return {
           offhand: $item`unbreakable umbrella`,
           acc1: $item`codpiece`,
           familiar: chooseFamiliar(false),
+          shirt: $item`Jurassic Parka`, modes: { parka: "dilophosaur" },
           modifier:
             "0.25 mys, 0.33 ML, -equip tinsel tights, -equip wad of used tape, -equip miniature crystal ball",
         };
@@ -490,47 +474,6 @@ export const RunStartQuest: Quest = {
         if (have($item`space blanket`)) autosell($item`space blanket`, 1);
       },
       limit: { tries: 1 },
-    },
-    {
-      name: "Novelty Tropical Skeleton",
-      prepare: (): void => {
-        if (!have($item`yellow rocket`) && !have($effect`Everything Looks Yellow`)) {
-          if (myMeat() < 250) throw new Error("Insufficient Meat to purchase yellow rocket!");
-          buy($item`yellow rocket`, 1);
-        }
-        unbreakableUmbrella();
-        if (get("_snokebombUsed") === 0) restoreMp(50);
-        if (haveEquipped($item`miniature crystal ball`)) equip($slot`familiar`, $item.none);
-      },
-      completed: () =>
-        have($item`cherry`) &&
-        $monsters`remaindered skeleton, swarm of skulls, factory-irregular skeleton, novelty tropical skeleton`.filter(
-          (m) => Array.from(getBanishedMonsters().values()).includes(m)
-        ).length >= (have($skill`Map the Monsters`) ? 2 : 3),
-      do: $location`The Skeleton Store`,
-      combat: new CombatStrategy().macro(
-        Macro.if_($monster`novelty tropical skeleton`, Macro.tryItem($item`yellow rocket`))
-          .trySkill($skill`Bowl a Curveball`)
-          .trySkill($skill`Snokebomb`)
-          .trySkill($skill`Monkey Slap`)
-          .abort()
-      ),
-      outfit: (): OutfitSpec => {
-        return {
-          offhand: $item`unbreakable umbrella`,
-          acc1: $item`codpiece`,
-          acc2: $item`cursed monkey's paw`,
-          familiar: chooseFamiliar(false),
-          modifier:
-            "0.25 mys, 0.33 ML, -equip tinsel tights, -equip wad of used tape, -equip miniature crystal ball",
-        };
-      },
-      post: (): void => {
-        if (have($item`MayDay™ supply package`) && !get("instant_saveMayday", false))
-          use($item`MayDay™ supply package`, 1);
-        if (have($item`space blanket`)) autosell($item`space blanket`, 1);
-      },
-      limit: { tries: 4 },
     },
     {
       name: "Chewing Gum",
@@ -542,20 +485,6 @@ export const RunStartQuest: Quest = {
       },
       acquire: [{ item: $item`toy accordion` }],
       limit: { tries: 50 },
-    },
-    {
-      name: "Get Distilled Fortified Wine",
-      ready: () => have($item`11-leaf clover`) || have($effect`Lucky!`),
-      completed: () => myInebriety() >= 1 || get("instant_skipDistilledFortifiedWine", false),
-      do: (): void => {
-        if (!have($effect`Lucky!`)) use($item`11-leaf clover`);
-        if (!have($item`distilled fortified wine`)) adv1($location`The Sleazy Back Alley`, -1);
-        while (have($item`distilled fortified wine`) && myInebriety() < 1) {
-          tryAcquiringEffect($effect`Ode to Booze`);
-          drink($item`distilled fortified wine`, 1);
-        }
-      },
-      limit: { tries: 1 },
     },
     {
       name: "Kramco",

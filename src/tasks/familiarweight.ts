@@ -1,5 +1,10 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { cliExecute, create, Effect, print, toInt, use, useFamiliar, visitUrl } from "kolmafia";
+import {
+  cliExecute, create,
+  eat, Effect, print,
+  storageAmount,
+  takeStorage, toInt, use, useFamiliar, visitUrl
+} from "kolmafia";
 import {
   $effect,
   $familiar,
@@ -20,6 +25,30 @@ export const FamiliarWeightQuest: Quest = {
   name: "Familiar Weight",
   completed: () => CommunityService.FamiliarWeight.isDone(),
   tasks: [
+    {
+      name: "Pull Deep Dish of Legend",
+      completed: () =>
+        have($item`Deep Dish of Legend`) ||
+        have($effect`In the Depths`) ||
+        get("_roninStoragePulls")
+          .split(",")
+          .includes(toInt($item`Deep Dish of Legend`).toString()) ||
+        get("_instant_skipDeepDishOfLegend", false),
+      do: (): void => {
+        if (storageAmount($item`Deep Dish of Legend`) === 0) {
+          print("Uh oh! You do not seem to have a Deep Dish of Legend in Hagnk's", "red");
+        }
+        takeStorage($item`Deep Dish of Legend`, 1);
+      },
+      limit: { tries: 1 },
+    },
+    {
+      name: "Eat Deep Dish",
+      ready: () => have($item`Deep Dish of Legend`),
+      completed: () => get("deepDishOfLegendEaten") || !have($item`Deep Dish of Legend`),
+      do: () => eat($item`Deep Dish of Legend`, 1),
+      limit: { tries: 1 },
+    },
     {
       name: "Meteor Shower",
       completed: () =>
