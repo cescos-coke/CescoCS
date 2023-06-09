@@ -130,6 +130,7 @@ export function baseOutfit(allowAttackingFamiliars = true): OutfitSpec {
         : undefined,
     familiar: famChoice,
     famequip: famChoice === $familiar`Melodramedary` ? $item`dromedary drinking helmet` : $item`tiny stillsuit`,
+    pants: $item`designer sweatpants`,
     modifier: "0.25 mys, 0.33 ML, -equip tinsel tights, -equip wad of used tape",
     avoid: sugarItemsAboutToBreak(),
   };

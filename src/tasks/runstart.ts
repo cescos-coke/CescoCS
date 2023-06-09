@@ -82,6 +82,12 @@ export const RunStartQuest: Quest = {
       limit: { tries: 1 },
     },
     {
+      name: "Guild",
+      completed: () => get("questG07Myst") != "unstarted",
+      do: () => visitUrl("guild.php?place=challenge"),
+      limit: { tries: 1 },
+    },
+    {
       name: "Skeleton Store",
       completed: () => get("questM23Meatsmith") !== "unstarted",
       do: (): void => {

@@ -582,7 +582,7 @@ export const LevelingQuest: Quest = {
       },
       ready: () => getKramcoWandererChance() >= 1.0,
       completed: () => getKramcoWandererChance() < 1.0 || !have($item`Kramco Sausage-o-Matic™`),
-      do: $location`Noob Cave`,
+      do: $location`The Haunted Pantry`,
       outfit: () => ({
         ...baseOutfit(),
         offhand: $item`Kramco Sausage-o-Matic™`,
@@ -728,11 +728,12 @@ export const LevelingQuest: Quest = {
         !CombatLoversLocket.availableLocketMonsters().includes($monster`Witchess King`) ||
         get("instant_saveLocketWitchessKing", false),
       do: () => CombatLoversLocket.reminisce($monster`Witchess King`),
-      combat: new CombatStrategy().macro(Macro.default(useCinch)),
+      combat: new CombatStrategy().macro(Macro.default(false)),
       outfit: baseOutfit,
       post: (): void => {
         sendAutumnaton();
         sellMiscellaneousItems();
+        print("Have myst: " + myBasestat($stat`Mysticality`) + " mox: " + myBasestat($stat`Moxie`) + " mus: " + myBasestat($stat`Muscle`));
       },
       limit: { tries: 1 },
     },
@@ -771,6 +772,7 @@ export const LevelingQuest: Quest = {
       post: (): void => {
         sendAutumnaton();
         sellMiscellaneousItems();
+        print("Have myst: " + myBasestat($stat`Mysticality`) + " mox: " + myBasestat($stat`Moxie`) + " mus: " + myBasestat($stat`Muscle`));
       },
       limit: { tries: 20 },
     },
