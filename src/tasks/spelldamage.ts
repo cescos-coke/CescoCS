@@ -10,19 +10,10 @@ import {
   myInebriety,
   myMaxhp,
   print,
-<<<<<<< HEAD
-<<<<<<< HEAD
   restoreHp,
-=======
   storageAmount,
   takeStorage,
   toInt,
->>>>>>> a5bf438 (First pass at redoing)
-=======
-  storageAmount,
-  takeStorage,
-  toInt,
->>>>>>> d03f649e40486a67edf45c67233daa04cee8a81b
   useSkill,
   visitUrl
 } from "kolmafia";

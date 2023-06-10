@@ -149,7 +149,6 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-<<<<<<< HEAD
       name: "Loathing Idol Microphone",
       completed: () =>
         // eslint-disable-next-line libram/verify-constants
@@ -172,8 +171,6 @@ export const BoozeDropQuest: Quest = {
       limit: { tries: 1 },
     },
     {
-=======
->>>>>>> d03f649e40486a67edf45c67233daa04cee8a81b
       name: "Test",
       prepare: (): void => {
         const usefulEffects: Effect[] = [
