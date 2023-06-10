@@ -45,6 +45,7 @@ export const NoncombatQuest: Quest = {
           $effect`A Rose by Any Other Material`,
           $effect`Feeling Lonely`,
           $effect`Gummed Shoes`,
+          $effect`Invisible Avatar`,
           $effect`Silent Running`,
           $effect`Smooth Movements`,
           $effect`The Sonata of Sneakiness`,
